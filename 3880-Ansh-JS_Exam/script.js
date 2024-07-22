@@ -35,19 +35,28 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   function displayProduct(product) {
-    let card = document.createElement("div");
+    let card = document.createElement("card");
     let div = document.createElement("div");
 
-    card.classList = "card-iteams";
+    card.classList = "main-card";
     div.classList = "card-body shadow p-3 mb-5";
+    let deleteButton = document.createElement("button");
 
     div.innerHTML = `
     <img src="${product.image}" alt="${product.title}">
         <h5>${product.title}</h5>
-        <p><strong>Category:</strong> ${product.category}</p>
-        <p><strong>Price:</strong> $${product.price}</p>
+        <p>Category : ${product.category}</p>
+        <p>Price : $${product.price}</p>
     `;
 
+    deleteButton.textContent = "Delete";
+    deleteButton.classList = "btn btn-danger";
+    deleteButton.addEventListener("click", function () {
+      deleteProduct(product.id);
+      card.remove();
+    });
+
+    div.appendChild(deleteButton);
     card.appendChild(div);
     productList.appendChild(card);
   }
@@ -60,6 +69,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   loadProducts();
+
+  function deleteProduct(productId) {
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    products = products.filter(product => product.id !== productId);
+    localStorage.setItem("products", JSON.stringify(products));
+  }
 
   clearButton.addEventListener("click", function () {
     localStorage.removeItem("products");
